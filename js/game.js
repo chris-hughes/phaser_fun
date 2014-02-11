@@ -28,13 +28,50 @@ function create() {
 
 	// player
 	player = game.add.sprite(32, game.world.height - 150, 'panda');
+	player.anchor.setTo(0.5,0.5);
 	player.body.gravity.y = 6;
 	player.body.collideWorldBounds = true;
+
+	player.animations.add('left', [15,16,15,17], 500, true);
+	player.animations.add('right', [15,16,15,17], 500, true);
+
+	// controls
+
+	cursors = game.input.keyboard.createCursorKeys();
 	
 };
 
 function update(){
 
+	// collisions
 	game.physics.collide(player,layer);
+
+	// player motion
+	player.body.velocity.x = 0;
+
+	if (cursors.left.isDown) {
+        //  Move to the left
+        player.body.velocity.x = -150;
+        player.scale.x = -1;
+        player.animations.play('left');
+    }
+    else if (cursors.right.isDown){
+        //  Move to the right
+        player.scale.x = 1;
+        player.body.velocity.x = 150;
+        player.animations.play('right');
+    }
+    else {
+        //  Stand still
+        player.animations.stop();
+        player.frame = 16;
+    }
+    
+    //  Allow the player to jump if they are touching the ground.
+    if (cursors.up.isDown && player.body.touching.down)
+    {
+        player.body.velocity.y = -250;
+    }
+
 
 };
