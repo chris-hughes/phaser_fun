@@ -22,13 +22,19 @@ function create() {
 	// level
 	map = game.add.tilemap('level');
 	tileset = game.add.tileset('tiles');
+	// everything collides from all sides
+	tileset.setCollisionRange(0, tileset.tiles.length-1, true, true, true, true);
 	layer = game.add.tilemapLayer(0, 0, 640, 640, tileset, map, 0);
 
 	// player
-	player = game.add.sprite(32, game.world.height - 150, 'panda');;
+	player = game.add.sprite(32, game.world.height - 150, 'panda');
+	player.body.gravity.y = 6;
+	player.body.collideWorldBounds = true;
 	
 };
 
 function update(){
+
+	game.physics.collide(player,layer);
 
 };
