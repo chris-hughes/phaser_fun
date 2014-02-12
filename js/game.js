@@ -32,8 +32,7 @@ function create() {
 	layer = game.add.tilemapLayer(0, 0, 640, 640, tileset, map, 0);
 
 	// player
-	player = game.add.sprite(500, game.world.height - 32, 'panda');
-	// player = game.add.sprite(32, game.world.height - 32, 'panda');
+	player = game.add.sprite(32, game.world.height - 32, 'panda');
 	player.anchor.setTo(0.5,0.5); // used to flip the sprites during animation
 	player.body.gravity.y = 6;
 	player.body.collideWorldBounds = true;
@@ -42,16 +41,17 @@ function create() {
 	player.animations.add('right', [15,16,15,17], 500, true);
 
 	// snails
-	snail = game.add.sprite(96, game.world.height - 50, 'snail', 14);
-	// snail = game.add.sprite(96, game.world.height - 224, 'snail', 14);
+
+	// snails = game.add.group();
+	snail = game.add.sprite(96, game.world.height - 224, 'snail', 14);
 	snail.body.gravity.y = 6;
 	snail.body.collideWorldBounds = true;
 
 	// snail.animations.add('left', [8,7,8,9], 2000, true);
 	// snail.animations.add('right', [15,14,15,16], 2000, true);
 
-	snail.animations.add('walk', [8,8,8], 2000, true);
-	snail.animations.play('walk');
+	// snail.animations.add('walk', [8,8,8], 2000, true);
+	// snail.animations.play('walk');
 
 	// controls
 
@@ -62,9 +62,9 @@ function create() {
 function update(){
 
 	// collisions
-	game.physics.collide(player,layer);
-	game.physics.collide(snail,layer);
-	game.physics.collide(player,snail);
+	game.physics.collide(player, layer);
+	game.physics.collide(snail, layer);
+	game.physics.collide(player, snail, hitSnail, null, this);
 
 	// player motion
 	player.body.velocity.x = 0;
@@ -90,12 +90,21 @@ function update(){
     //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && player.body.touching.down){
         player.body.velocity.y = -300;
-        console.log(snail.x);
+    }
+
+    function hitSnail(player, snail){
+    	
+    	if (player.body.touching.down){
+    		snail.kill();
+    	}
+    	else {
+    		player.kill();
+    	}
     }
 
     // snail motion
     // to: function ( properties, duration, ease, autoStart, delay, repeat, yoyo )
-    var tween = game.add.tween(snail).to({ x: 200 }, 2000, Phaser.Easing.Linear.None)
-    .to({ x: 96 }, 2000, Phaser.Easing.Linear.None).loop().start();
+    // var tween = game.add.tween(snail).to({ x: 200 }, 2000, Phaser.Easing.Linear.None)
+    // .to({ x: 96 }, 2000, Phaser.Easing.Linear.None).loop().start();
 
 };
