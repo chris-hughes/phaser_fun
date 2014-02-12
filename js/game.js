@@ -42,10 +42,18 @@ function create() {
 
 	// snails
 
-	// snails = game.add.group();
-	snail = game.add.sprite(96, game.world.height - 224, 'snail', 14);
-	snail.body.gravity.y = 6;
-	snail.body.collideWorldBounds = true;
+	snailsCoords = [[96,450,14], [485,450,7], [280,354,14], [130,258,14], [480,258,7], [225,162,14]];
+	
+	snails = game.add.group();
+	for (var i=0; i<snailsCoords.length; i++){
+		var snail = snails.create(snailsCoords[i][0], snailsCoords[i][1], 'snail', snailsCoords[i][2]);	
+		snail.body.gravity.y = 6;
+		snail.body.collideWorldBounds = true;
+	}
+
+	// snail = game.add.sprite(96, game.world.height - 224, 'snail', 14);
+	// snails.body.gravity.y = 6;
+	// snails.body.collideWorldBounds = true;
 
 	// snail.animations.add('left', [8,7,8,9], 2000, true);
 	// snail.animations.add('right', [15,14,15,16], 2000, true);
@@ -63,8 +71,8 @@ function update(){
 
 	// collisions
 	game.physics.collide(player, layer);
-	game.physics.collide(snail, layer);
-	game.physics.collide(player, snail, hitSnail, null, this);
+	game.physics.collide(snails, layer);
+	game.physics.collide(player, snails, hitSnail, null, this);
 
 	// player motion
 	player.body.velocity.x = 0;
@@ -90,11 +98,17 @@ function update(){
     //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && player.body.touching.down){
         player.body.velocity.y = -300;
+        console.log("x= "+player.body.x);
+        console.log("y= "+player.body.y);
     }
 
     function hitSnail(player, snail){
     	
-    	if (player.body.touching.down){
+    	// belt and braces, using down only caused problems
+    	if (player.body.touching.left ==false && 
+    		player.body.touching.right ==false && 
+    		player.body.touching.up == false)
+    	{
     		snail.kill();
     	}
     	else {
